@@ -12,7 +12,7 @@
     <meta property="og:title" content="{{ $commonData['school_name'] }}" />
     <meta property="og:description" content="মানসম্পন্ন ইসলামী ও আধুনিক শিক্ষার প্রতিষ্ঠান" />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="{{ asset('frontend/images/logo.png') }}" />
+    <meta property="og:image" content="{{ $commonData['logo'] }}" />
     <meta name="twitter:title" content="{{ $commonData['school_name'] }}" />
     <meta name="twitter:description" content="মানসম্পন্ন ইসলামী ও আধুনিক শিক্ষার প্রতিষ্ঠান" />
     <meta name="twitter:card" content="summary_large_image" />
@@ -27,7 +27,7 @@
     <link rel="stylesheet" href="{{ asset('frontend/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('frontend/css/auth.css') }}">
     <link rel="stylesheet" href="{{ asset('frontend/css/responsive.css') }}">
-    <link rel="icon" href="{{ asset('frontend/images/logo.png') }}" type="image/x-icon">
+    <link rel="icon" href="{{ $commonData['logo'] }}" type="image/x-icon">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/bn.js"></script>

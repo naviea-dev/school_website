@@ -2,7 +2,7 @@
     <header class="navbar container">
         <div class="nav-content">
             <a class="logo-section" href="{{ route('home') }}">
-                <img src="{{ asset('frontend/images/logo.png') }}" alt="{{ $commonData['school_name'] }}" class="logo">
+                <img src="{{ $commonData['logo'] }}" alt="{{ $commonData['school_name'] }}" class="logo">
                 <h2 class="logo_text">{{ $commonData['school_name'] }}</h2>
             </a>
 

@@ -42,6 +42,7 @@ class CommonDataComposer
     {
         return [
             'school_name' => $data->data->school->name ?? 'EduiBD',
+            'logo' => $data->data->school->logo,
             'school_tag' => 'We provide a supportive learning environment where students develop academic excellence, creativity, confidence, and essential skills to succeed in a global society.',
             'school' => $data->data->school ?? null,
             'menus' => $this->buildMenuTree(

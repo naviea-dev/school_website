@@ -6,7 +6,7 @@
 
             <div class="footer-box text-center text-md-start">
                 <a class="footer-logo mb-4 d-inline-block" href="{{ route('home') }}">
-                    <img src="{{ asset('frontend/images/logo.png') }}"
+                    <img src="{{ $commonData['logo'] }}"
                         alt="logo" class="img-fluid" style="max-width: 180px;">
                 </a>
 
