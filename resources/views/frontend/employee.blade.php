@@ -5,52 +5,30 @@
 @section('sidebar')
     @parent
 @endsection
-<style>
-@import url('https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css');
-</style>
+
 @section('content')
-	 <div id="page" class="page">
-          <div class="container-fluid">
-                	<div class="row">
-                    <div class="col-sm-12">
+<main id="main" class="bg-light py-5">
+    <div class="container">
+        <div class="row mb-5">
+            <div class="col-12">
+                <h3 class="section-title text-dark fw-bold">শিক্ষক মণ্ডলী</h3>
+                <p class="text-muted">প্রতিষ্ঠানের সকল শিক্ষকের তালিকা।</p>
+            </div>
+        </div>
 
-                        	<h2 class="title" style="padding:10px 0; margin:10px 0; float:left">শিক্ষক মণ্ডলী</h2>
-                            @if($allemployee!="")
-                              <table id="responsive-datatable" class="table table-striped table-bordered" cellspacing="0" width="100%">
-                                <thead style="background:#C1DFFD;">
-                                    <tr>
-                                      <th width="4%">ক্রমিক</th>
-                                      <th width="15%">ছবি</th>
-                                      <th width="20%">নাম</th>
-                                      <th width="24%">পদবি</th>
-                                      <th width="24%">মোবাইল</th>
-                                      <th width="24%">ইমেইল</th>
-                                  </tr>
-                			  </thead>
-                               <tbody>
-                			<?php $i=0; ?>
-                            @foreach($allemployee as $employee)
-                            <?php $i++;
-							?>
-
-                            <tr>
-                              <td>{{ $i }}</td>
-                              <td><img src="{{ $employee->image }}" style="width:70px; height:auto" /></td>
-                              <td>{{ $employee->name }}</td>
-							  <td>{{ $employee->designation }}</td>
-                              <td>{{ $employee->mobile }}</td>
-                              <td>{{ $employee->email }}</td>
-                            </tr>
-                            @endforeach
-            				</tbody>
-                      </table>
-                            @endif
-                        </div>
-                      </div>
-    	  </div>
-  	</div>
+        @if($allemployee->isNotEmpty())
+            @include('frontend.partials.vip-grid', ['members' => $allemployee, 'gridKey' => 'members'])
+        @else
+            <div class="col-12 text-center py-5">
+                <div class="p-5 bg-white rounded-4 shadow-sm">
+                    <ion-icon name="people-outline" style="font-size: 4rem; color: #dee2e6;"></ion-icon>
+                    <h4 class="mt-3 text-muted">কোন শিক্ষক তথ্য পাওয়া যায়নি</h4>
+                </div>
+            </div>
+        @endif
+    </div>
+</main>
 @endsection
-
 
 @section('footer')
     @parent

@@ -8,9 +8,33 @@
         <div class="row mb-5">
             <div class="col-12">
                 <h3 class="section-title text-dark fw-bold">নোটিশ বোর্ড</h3>
-                <p class="text-muted">মাদরাসার সর্বশেষ নোটিশ, বিজ্ঞপ্তি ও গুরুত্বপূর্ণ তথ্য এখানে পাবেন।</p>
+                <p class="text-muted">
+                    @if($activeType)
+                        <strong>{{ $activeType->name }}</strong> বিভাগের নোটিশ।
+                        <a href="{{ route('notice') }}" class="text-success text-decoration-none fw-bold">সকল নোটিশ দেখুন</a>
+                    @else
+                        মাদরাসার সর্বশেষ নোটিশ, বিজ্ঞপ্তি ও গুরুত্বপূর্ণ তথ্য এখানে পাবেন।
+                    @endif
+                </p>
             </div>
         </div>
+
+        @if($noticeTypes->count() > 1)
+        <div class="row mb-4">
+            <div class="col-12 d-flex flex-wrap gap-2">
+                <a href="{{ route('notice') }}"
+                   class="badge rounded-pill px-3 py-2 text-decoration-none {{ !$activeType ? 'bg-success text-white' : 'bg-success-subtle text-success' }}">
+                    সকল
+                </a>
+                @foreach($noticeTypes as $type)
+                <a href="{{ route('notice', ['type' => $type->id]) }}"
+                   class="badge rounded-pill px-3 py-2 text-decoration-none {{ $activeType && $activeType->id === $type->id ? 'bg-success text-white' : 'bg-success-subtle text-success' }}">
+                    {{ $type->name }}
+                </a>
+                @endforeach
+            </div>
+        </div>
+        @endif
 
         <div class="row g-4">
             @forelse($notices as $lnotice)

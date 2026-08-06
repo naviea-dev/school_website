@@ -180,7 +180,15 @@ class Index extends Controller
 
 	public function notice()
 	{
+		$noticeTypes = collect(app(SchoolSassClient::class)->noticeTypes())->map(fn($t) => (object) $t);
+
+		$typeId = request()->get('type');
 		$all = collect(app(SchoolSassClient::class)->notices())->sortByDesc('id')->values()->map(fn($n) => (object) $n);
+
+		if ($typeId) {
+			$all = $all->where('notice_type_id', (int) $typeId)->values();
+		}
+
 		$perPage = 50;
 		$page = (int) request()->get('page', 1);
 		$notices = new \Illuminate\Pagination\LengthAwarePaginator(
@@ -191,7 +199,9 @@ class Index extends Controller
 			['path' => request()->url(), 'query' => request()->query()]
 		);
 
-		return view('frontend.notice', compact('notices'));
+		$activeType = $typeId ? $noticeTypes->firstWhere('id', (int) $typeId) : null;
+
+		return view('frontend.notice', compact('notices', 'noticeTypes', 'activeType'));
 	}
 	public function notice_details($id)
 	{
@@ -230,8 +240,10 @@ class Index extends Controller
 			->map(fn($t) => (object) [
 				'id' => $t->id ?? null,
 				'name' => $t->name ?? '',
+				'position' => $t->designation->name ?? '',
 				'designation' => $t->designation->name ?? '',
 				'image' => $t->image ?? null,
+				'details' => $t->bio ?? '',
 				'mobile' => $t->mobile ?? '',
 				'email' => $t->email ?? '',
 			]);

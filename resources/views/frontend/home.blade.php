@@ -81,8 +81,10 @@ $mediaPlaceholder = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53M
             <span class="d-block m-auto mt-2" style="width: 70px; height: 3px; background: #ff9900; border-radius: 10px;"></span>
         </h3>
 
+        @php $noticetypesList = collect($noticetypes); @endphp
+
         <div class="row g-4">
-            @foreach ($noticetypes as $noticet)
+            @foreach ($noticetypesList->take(4) as $noticet)
             <div class="col-lg-6" data-aos="fade-up">
                 <div class="feature-card shadow-sm p-4 rounded bg-white">
                     <h4 class="h4 mb-3">{{ $noticet->name }}</h4>
@@ -90,8 +92,9 @@ $mediaPlaceholder = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53M
                         {{ Str::limit($noticet->details, 120) }}
                     </p>
 
+                    @php $noticeItems = collect($noticet->items); @endphp
                     <ul class="feature-list mt-3">
-                        @foreach ($noticet->items as $notice)
+                        @foreach ($noticeItems->take(4) as $notice)
                         <li>
                             <a href="{{ route('notice.details', $notice->id) }}" class="d-flex align-items-center">
                                 <ion-icon name="chevron-forward-circle-outline" class="me-2"></ion-icon>
@@ -99,11 +102,25 @@ $mediaPlaceholder = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53M
                             </a>
                         </li>
                         @endforeach
+                        @if($noticeItems->count() > 4)
+                        <li>
+                            <a href="{{ route('notice', ['type' => $noticet->id]) }}" class="d-flex align-items-center fw-bold">
+                                <ion-icon name="arrow-forward-circle-outline" class="me-2"></ion-icon>
+                                <span>আরও দেখুন</span>
+                            </a>
+                        </li>
+                        @endif
                     </ul>
                 </div>
             </div>
             @endforeach
         </div>
+
+        @if($noticetypesList->count() > 4)
+        <div class="text-center mt-4">
+            <a href="{{ route('notice') }}" class="view-all-btn px-4 py-2" style="font-size: 15px;">সকল নোটিশ দেখুন</a>
+        </div>
+        @endif
     </div>
 
     <div class="container mt-5 mb-5">
