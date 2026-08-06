@@ -8,9 +8,9 @@
     .article-container {
         background: #ffffff;
         border-radius: 16px;
-        border: 1px solid rgba(0,0,0,0.05);
+        border: 1px solid rgba(0, 0, 0, 0.05);
     }
-    
+
     .article-main-img {
         width: 100%;
         max-height: 500px;
@@ -69,6 +69,7 @@
         font-weight: 600;
         transition: all 0.3s;
     }
+
     .action-btn:hover {
         background: #f8fdfa;
         color: #198754;
@@ -91,12 +92,12 @@
             <div class="col-lg-10">
                 @if($articles)
                 <article class="article-container shadow-sm p-4 p-md-5">
-                    
+
                     @if($articles->image)
                     <div class="mb-5">
                         <img src="{{ $articles->image }}"
-                             alt="{{ $articles->title }}" 
-                             class="article-main-img shadow-sm">
+                            alt="{{ $articles->title }}"
+                            class="article-main-img shadow-sm">
                     </div>
                     @endif
 
@@ -109,20 +110,14 @@
                                 </button>
                             </div>
                         </div>
-                        
+
                         <h1 class="article-title display-6 mb-3">{{ $articles->title }}</h1>
-                        
+
                         <div class="meta-info">
                             <span class="d-flex align-items-center gap-2">
                                 <ion-icon name="calendar-outline" class="text-success"></ion-icon>
-                                প্রকাশিত: {{ $articles->created_at->format('d F, Y') }}
+                                প্রকাশিত: {{ $articles->created_at }}
                             </span>
-                            @if($articles->author)
-                            <span class="d-flex align-items-center gap-2">
-                                <ion-icon name="person-outline" class="text-success"></ion-icon>
-                                লেখক: {{ $articles->author }}
-                            </span>
-                            @endif
                             <span class="d-flex align-items-center gap-2">
                                 <ion-icon name="business-outline" class="text-success"></ion-icon>
                                 {{ $commonData['school_name'] }}
@@ -156,11 +151,29 @@
                     </div>
                 </article>
                 @else
-                <div class="text-center py-5 bg-white rounded-4 shadow-sm border">
-                    <ion-icon name="search-outline" style="font-size: 4rem; color: #dee2e6;"></ion-icon>
-                    <h4 class="mt-3 text-muted">দুঃখিত, কোনো আর্টিকেল পাওয়া যায়নি।</h4>
-                    <a href="/" class="btn btn-success mt-3 rounded-pill">হোম পেজে ফিরে যান</a>
+
+                <div class="article-container shadow-sm p-5 text-center">
+
+                    <ion-icon
+                        name="document-text-outline"
+                        style="font-size: 80px; color:#adb5bd;">
+                    </ion-icon>
+
+                    <h3 class="mt-4 text-muted">
+                        কোনো তথ্য পাওয়া যায়নি
+                    </h3>
+
+                    <p class="text-secondary">
+                        দুঃখিত, এই পেজের জন্য কোনো কনটেন্ট পাওয়া যায়নি।
+                    </p>
+
+                    <a href="{{ url('/') }}" class="btn btn-success rounded-pill px-4 mt-3">
+                        <ion-icon name="home-outline" class="me-1"></ion-icon>
+                        হোম পেজে ফিরে যান
+                    </a>
+
                 </div>
+
                 @endif
             </div>
         </div>

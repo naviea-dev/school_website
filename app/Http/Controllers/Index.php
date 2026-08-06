@@ -88,29 +88,8 @@ class Index extends Controller
 
 	public function index()
 	{
-		/* $banners = $this->apiService->request('banners');
-		$allNotices = $this->apiService->request('notices');
-		$noticetypes = $this->apiService->request('notice-types');
-		$photoGalleries = $this->apiService->request('photo-gallery');
-		$faculties = $this->apiService->request('faculty');
-		$stats = $this->apiService->request('stats');
-		$eShebaCards = collect(self::E_SHEBA)->map(fn($e) => (object) $e);
-		$schoolClasses = $this->apiService->request('classes');
-
-		return view('frontend.home', compact(
-			'banners',
-			'allNotices',
-			'noticetypes',
-			'photoGalleries',
-			'faculties',
-			'stats',
-			'eShebaCards',
-			'schoolClasses'
-		)); */
-
 		$data = $this->apiService->request('home');
 		$eShebaCards = collect(self::E_SHEBA)->map(fn($e) => (object) $e);
-		//dd($data);
 
 		return view('frontend.home', [
 			'banners' => $data->banners,
@@ -124,82 +103,46 @@ class Index extends Controller
 		]);
 	}
 
-	public function contents()
+	public function contents($slug, $slug2 = null)
 	{
 		try {
 
-			$slug    = request()->segment(2);
-			$sslug   = request()->segment(3);
-			$ssslug  = request()->segment(4);
+			$uri = $slug2 ? "{$slug}/{$slug2}" : $slug;
 
-			$schoolSass = app(SchoolSassClient::class);
-			$tree = collect($schoolSass->menuTree());
+			$response = $this->apiService->request("contents/{$uri}");
 
-			$menuslug = null;
-			$allsubmenus = collect();
-
-			$top = $tree->firstWhere('uri', $slug);
-
-			// =========================
-			// 3 LEVEL MENU
-			// =========================
-			if ($top && $sslug && $ssslug) {
-
-				$mid = collect($top['children'] ?? [])->firstWhere('uri', $sslug);
-				$menuslug = $mid ? collect($mid['children'] ?? [])->firstWhere('uri', $ssslug) : null;
-			}
-			// =========================
-			// 2 LEVEL MENU
-			// =========================
-			elseif ($top && $sslug && !$ssslug) {
-
-				$menuslug = collect($top['children'] ?? [])->firstWhere('uri', $sslug);
-				$allsubmenus = $menuslug ? collect($menuslug['children'] ?? []) : collect();
-			}
-			// =========================
-			// 1 LEVEL MENU
-			// =========================
-			elseif ($top && !$sslug && !$ssslug) {
-
-				$menuslug = $top;
-				$allsubmenus = collect($top['children'] ?? []);
+			if (empty($response->status) || !$response->status || empty($response->content)) {
+				return view('frontend.article', [
+					'articles' => null
+				]);
 			}
 
-			// =========================
-			// NOT FOUND HANDLING
-			// =========================
-			if (!$menuslug) {
-				return redirect()->route('home')
-					->with('error', 'Content not found');
-			}
+			$articles = (object) $response->content;
 
-			$menuslug = (object) $menuslug;
-			$allsubmenus = $allsubmenus->map(fn($m) => (object) $m);
-
-			// =========================
-			// SAFE CONTENT LOAD
-			// =========================
-			$articleData = $schoolSass->content($menuslug->id);
-			$articles = $articleData ? (object) $articleData : null;
-			if ($articles) {
-				$articles->author = $articles->author ?? null;
-				if (!empty($articles->created_at)) {
-					$articles->created_at = \Illuminate\Support\Carbon::parse($articles->created_at);
-				}
-			}
-
-			return view('frontend.article', compact(
-				'articles',
-				'menuslug',
-				'allsubmenus'
-			));
+			return view('frontend.article', compact('articles'));
 		} catch (\Throwable $e) {
 
-			Log::error('Content page error: ' . $e->getMessage());
-
-			return redirect()->route('home')
-				->with('error', 'Something went wrong');
+			return view('frontend.article', [
+				'articles' => null
+			]);
 		}
+	}
+
+
+	public function photos(Request $req)
+	{
+		$photos = $this->apiService->request('photo-gallery');
+
+		return view('frontend.photos', compact('photos'));
+	}
+
+
+
+	public function videos(Request $req)
+	{
+		$videos = collect(app(SchoolSassClient::class)->videoGallery())->map(fn($v) => (object) $v);
+
+		return view('frontend.videos', compact('videos'));
 	}
 
 
@@ -279,21 +222,7 @@ class Index extends Controller
 	}
 
 
-	public function photos(Request $req)
-	{
-		$photos = collect(app(SchoolSassClient::class)->photoGallery())->map(fn($p) => (object) $p);
-
-		return view('frontend.photos', compact('photos'));
-	}
-
-
-
-	public function videos(Request $req)
-	{
-		$videos = collect(app(SchoolSassClient::class)->videoGallery())->map(fn($v) => (object) $v);
-
-		return view('frontend.videos', compact('videos'));
-	}
+	
 
 	public function results()
 	{

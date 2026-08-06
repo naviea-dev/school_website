@@ -142,12 +142,6 @@
                 </div>
             @endforelse
         </div>
-        
-        @if(method_exists($photos, 'links'))
-        <div class="d-flex justify-content-center mt-5">
-            {{ $photos->links('pagination::bootstrap-5') }}
-        </div>
-        @endif
     </div>
 </main>
 @endsection

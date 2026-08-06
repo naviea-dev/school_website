@@ -11,7 +11,12 @@
 
                 @foreach ($commonData['menus'] as $menu)
                 <?php
-                $mainurl = route('websitecontent.slug', [$menu->uri]);
+                if($menu->page_structure == 'Page') {
+                    $mainurl = url($menu->uri);
+                }
+                else{
+                    $mainurl = route('websitecontent.slug', [$menu->uri]);
+                }
                 $mclass = $menu->subMenu->count() != 0 ? 'has-sub' : '';
                 ?>
                 <li class="{{ $mclass }}">
