@@ -91,14 +91,38 @@ class Index extends Controller
 		$data = $this->apiService->request('home');
 		$eShebaCards = collect(self::E_SHEBA)->map(fn($e) => (object) $e);
 
+		$managements = collect(json_decode(json_encode(app(SchoolSassClient::class)->management())))
+			->map(fn($m) => (object) [
+				'name' => $m->name ?? '',
+				'position' => $m->designation ?? '',
+				'designation' => $m->designation ?? '',
+				'image' => $m->image ?? null,
+				'details' => $m->details ?? '',
+			]);
+
+		$teachers = collect(json_decode(json_encode(app(SchoolSassClient::class)->teachers())))
+			->map(fn($t) => (object) [
+				'name' => $t->name ?? '',
+				'position' => $t->designation->name ?? '',
+				'designation' => $t->designation->name ?? '',
+				'image' => $t->image ?? null,
+			]);
+
+		$videoGalleries = collect(app(SchoolSassClient::class)->videoGallery())
+			->take(8)
+			->map(fn($v) => (object) $v);
+
 		return view('frontend.home', [
-			'banners' => $data->banners,
-			'allNotices' => $data->notices,
-			'noticetypes' => $data->notice_types,
-			'photoGalleries' => $data->photo_gallery,
-			'faculties' => $data->faculty,
-			'stats' => $data->stats,
-			'schoolClasses' => $data->classes,
+			'banners' => $data->banners ?? [],
+			'allNotices' => $data->notices ?? [],
+			'noticetypes' => $data->notice_types ?? [],
+			'photoGalleries' => collect($data->photo_gallery ?? []),
+			'faculties' => collect($data->faculty ?? []),
+			'managements' => $managements,
+			'teachers' => $teachers,
+			'videoGalleries' => $videoGalleries,
+			'stats' => $data->stats ?? (object) [],
+			'schoolClasses' => $data->classes ?? [],
 			'eShebaCards' => $eShebaCards,
 		]);
 	}
@@ -173,6 +197,11 @@ class Index extends Controller
 	{
 		$all = collect(app(SchoolSassClient::class)->notices())->map(fn($n) => (object) $n);
 		$notices = $all->firstWhere('id', (int) $id);
+
+		if (!$notices) {
+			abort(404);
+		}
+
 		$relnotices = $all;
 
 		return view('frontend.notice_details', compact('notices', 'relnotices'));
@@ -197,17 +226,28 @@ class Index extends Controller
 
 	public function employee(Request $req)
 	{
-		$allemployee = collect(app(SchoolSassClient::class)->faculty())
-			->sortBy('sequence')
-			->values()
-			->map(fn($m) => (object) $m);
+		$allemployee = collect(json_decode(json_encode(app(SchoolSassClient::class)->teachers())))
+			->map(fn($t) => (object) [
+				'id' => $t->id ?? null,
+				'name' => $t->name ?? '',
+				'designation' => $t->designation->name ?? '',
+				'image' => $t->image ?? null,
+				'mobile' => $t->mobile ?? '',
+				'email' => $t->email ?? '',
+			]);
 
 		return view('frontend.employee', compact('allemployee'));
 	}
 	public function employee_details($id)
 	{
-		$employee = collect(app(SchoolSassClient::class)->faculty())
-			->map(fn($m) => (object) $m)
+		$employee = collect(json_decode(json_encode(app(SchoolSassClient::class)->teachers())))
+			->map(fn($t) => (object) [
+				'id' => $t->id ?? null,
+				'name' => $t->name ?? '',
+				'designation' => $t->designation->name ?? '',
+				'image' => $t->image ?? null,
+				'bio' => $t->bio ?? '',
+			])
 			->firstWhere('id', (int) $id);
 
 		return view('frontend.employee_details', compact('employee'));
@@ -222,7 +262,7 @@ class Index extends Controller
 	}
 
 
-	
+
 
 	public function results()
 	{

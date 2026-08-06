@@ -939,6 +939,43 @@
      transform: translateY(0);
  }
 
+ .video-feature-main {
+     position: relative;
+     display: block;
+     overflow: hidden;
+     border-radius: 10px;
+ }
+
+ .video-feature-main img {
+     width: 100%;
+     height: 320px;
+     object-fit: cover;
+     display: block;
+ }
+
+ .video-feature-play {
+     position: absolute;
+     top: 50%;
+     left: 50%;
+     transform: translate(-50%, -50%);
+     font-size: 4rem;
+     color: #fff;
+     opacity: 0.9;
+     transition: transform 0.3s ease;
+ }
+
+ .video-feature-main:hover .video-feature-play {
+     transform: translate(-50%, -50%) scale(1.1);
+ }
+
+ .videoSwiper {
+     padding: 0 40px;
+ }
+
+ .videoSwiper .gallery-image {
+     height: 140px;
+ }
+
  /* মেইন ফুটার স্টাইল */
 .gov-footer {
     background: #097744; /* ডার্ক থিম */
@@ -1767,6 +1804,42 @@
      color: #198754;
  }
 
+ /* Share Icons */
+ .share-icon-btn {
+     display: inline-flex;
+     align-items: center;
+     justify-content: center;
+     width: 44px;
+     height: 44px;
+     border-radius: 50%;
+     font-size: 1.25rem;
+     color: #fff;
+     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+     transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+ }
+
+ .share-icon-btn:hover,
+ .share-icon-btn:focus-visible {
+     transform: translateY(-3px);
+     opacity: 0.92;
+     color: #fff;
+ }
+
+ .share-icon-btn:focus-visible {
+     outline: 3px solid #198754;
+     outline-offset: 2px;
+ }
+
+ .share-icon-facebook {
+     background: #1877f2;
+     box-shadow: 0 2px 6px rgba(24, 119, 242, 0.3);
+ }
+
+ .share-icon-whatsapp {
+     background: #25d366;
+     box-shadow: 0 2px 6px rgba(37, 211, 102, 0.3);
+ }
+
 /* মেইন ফ্লোটিং কন্টেইনার */
 .floating-clock-plugin {
     position: fixed;
@@ -1905,6 +1978,10 @@
     margin-top: 40px;
 }
 
+.vip-grid-3col {
+    grid-template-columns: repeat(3, 1fr);
+}
+
 /* ৩. ভিআইপি কার্ড ডিজাইন */
 .vip-card {
     background: #fff;
@@ -1969,6 +2046,17 @@
     font-size: 1rem;
 }
 
+.see-more-link {
+    background: none;
+    border: none;
+    padding: 0;
+    color: #198754;
+    font-weight: 600;
+    font-size: inherit;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
 .vip-body small {
     color: #718096;
     display: block;
@@ -1979,6 +2067,10 @@
 @media (min-width: 1200px) {
     .vip-grid {
         grid-template-columns: repeat(4, 1fr);
+    }
+
+    .vip-grid-3col {
+        grid-template-columns: repeat(3, 1fr);
     }
 }
 

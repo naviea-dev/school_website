@@ -22,73 +22,21 @@ $helplines = [
     ['url' => 'https://land.gov.bd/', 'img' => 'land.png', 'label' => 'স্মার্ট ভূমি সেবা', 'number' => '১৬১২২'],
     ['url' => 'https://bkkb.gov.bd/', 'img' => 'bangladesh.png', 'label' => 'কর্মচারী কল্যাণ বোর্ড', 'number' => '১৬১০৯'],
 ];
+$mediaPlaceholder = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMzAwIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iI2UyZThmMCIvPjxjaXJjbGUgY3g9IjEzMCIgY3k9IjExMCIgcj0iMzAiIGZpbGw9IiNjYmQ1ZTAiLz48cGF0aCBkPSJNNDAgMjYwbDkwLTEwMCA3MCA3MCA2MC02MCAxMDAgOTB6IiBmaWxsPSIjY2JkNWUwIi8+PC9zdmc+';
 ?>
 @include('layouts.banner')
 
-
-
-
-<section class="categories container">
-
-    <a href="{{ route('photos') }}"
-        class="card d-flex flex-column align-items-center gap-2 text-decoration-none shadow-sm">
-        <ion-icon name="images-outline"></ion-icon>
-        <span>ছবি গ্যালারী</span>
-    </a>
-
-    <a href="{{ route('videos') }}"
-        class="card d-flex flex-column align-items-center gap-2 text-decoration-none shadow-sm">
-        <ion-icon name="videocam-outline"></ion-icon>
-        <span>ভিডিও গ্যালারী</span>
-    </a>
-
-    <a href="{{ route('notice') }}"
-        class="card d-flex flex-column align-items-center gap-2 text-decoration-none shadow-sm">
-        <ion-icon name="notifications-outline"></ion-icon>
-        <span>নোটিশ বোর্ড</span>
-    </a>
-
-    <a href="{{ route('results') }}"
-        class="card d-flex flex-column align-items-center gap-2 text-decoration-none shadow-sm">
-        <ion-icon name="bar-chart-outline"></ion-icon>
-        <span>ফলাফল</span>
-    </a>
-
-    <a href="{{ route('online-form') }}"
-        class="card d-flex flex-column align-items-center gap-2 text-decoration-none shadow-sm">
-        <ion-icon name="document-text-outline"></ion-icon>
-        <span>অনলাইন ফর্ম</span>
-    </a>
-
-</section>
-
 <section class="vip-parallax-section">
     <div class="container">
-        <h3 class="text-center mb-5 fw-bold h2 vip-main-title" style="color: var(--gov-green);">
-            সম্মানিত পরিচালনা পর্ষদ ও প্রশাসন
-        </h3>
-
-        <div class="vip-grid">
-            @foreach($faculties as $vip)
-            <div class="vip-card">
-
-                <div class="vip-title">
-                    {{ $vip->position }}
-                </div>
-
-                <div class="vip-body">
-                    @if($vip->image)
-                    <img src="{{ $vip->image }}"
-                        alt="{{ $vip->name }}">
-                    @endif
-
-                    <h5>{{ $vip->name }}</h5>
-                    <p class="designation">{{ $vip->designation }}</p>
-                </div>
-
-            </div>
-            @endforeach
+        <div class="position-relative mb-5">
+            <h3 class="text-center fw-bold h2 vip-main-title mb-0" style="color: var(--gov-green);">
+                সম্মানিত পরিচালনা পর্ষদ ও প্রশাসন
+            </h3>
+            <a href="{{ route('management') }}"
+                class="c-button btn btn-sm rounded-pill position-absolute top-0 end-0">সব দেখুন</a>
         </div>
+
+        @include('frontend.partials.vip-grid', ['members' => $managements, 'gridKey' => 'board', 'gridClass' => 'vip-grid-3col'])
 
         <div class="secondary-info-block text-center mt-5">
             <h4 class="fw-bold">শিক্ষক মণ্ডলী ও প্রশাসন</h4>
@@ -98,10 +46,199 @@ $helplines = [
             </p>
             <div class="title-divider"></div>
         </div>
+
+        <h3 class="text-center mb-5 mt-5 fw-bold h2 vip-main-title" style="color: var(--gov-green);">
+            প্রশাসন
+        </h3>
+
+        @include('frontend.partials.vip-grid', ['members' => $faculties->take(4), 'gridKey' => 'teacher'])
+
+        @if($faculties->count() > 4)
+        <div class="text-center mt-4">
+            <a href="{{ route('faculty') }}" class="c-button btn btn-sm rounded-pill">সব দেখুন</a>
+        </div>
+        @endif
+
+        <h3 class="text-center mb-5 mt-5 fw-bold h2 vip-main-title" style="color: var(--gov-green);">
+            শিক্ষক মণ্ডলী
+        </h3>
+
+        @include('frontend.partials.vip-grid', ['members' => $teachers->take(8), 'gridKey' => 'staff'])
+
+        @if($teachers->count() > 8)
+        <div class="text-center mt-4">
+            <a href="{{ route('members') }}" class="c-button btn btn-sm rounded-pill">সব দেখুন</a>
+        </div>
+        @endif
     </div>
 </section>
 
 <main>
+
+    <div class="container mt-5 mb-5">
+        <h3 class="text-center mb-5 fw-bold h2" style="color: #198754;">
+            নোটিশ সমূহ
+            <span class="d-block m-auto mt-2" style="width: 70px; height: 3px; background: #ff9900; border-radius: 10px;"></span>
+        </h3>
+
+        <div class="row g-4">
+            @foreach ($noticetypes as $noticet)
+            <div class="col-lg-6" data-aos="fade-up">
+                <div class="feature-card shadow-sm p-4 rounded bg-white">
+                    <h4 class="h4 mb-3">{{ $noticet->name }}</h4>
+                    <p class="text-muted small">
+                        {{ Str::limit($noticet->details, 120) }}
+                    </p>
+
+                    <ul class="feature-list mt-3">
+                        @foreach ($noticet->items as $notice)
+                        <li>
+                            <a href="{{ route('notice.details', $notice->id) }}" class="d-flex align-items-center">
+                                <ion-icon name="chevron-forward-circle-outline" class="me-2"></ion-icon>
+                                <span>{{ $notice->name }}</span>
+                            </a>
+                        </li>
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
+            @endforeach
+        </div>
+    </div>
+
+    <div class="container mt-5 mb-5">
+        <div class="box left-margin-10">
+            <header class="section-header">
+                <h3>ছবি গ্যালারী</h3>
+                <a href="{{ route('photos') }}" class="view-all-btn">সব দেখুন</a>
+            </header>
+            <div class="row">
+                @foreach ($photoGalleries->take(8) as $photo)
+                <?php $coverImage = $photo->image != '' ? $photo->image : $mediaPlaceholder; ?>
+                <div class="col-6 col-md-3 pt-2 pb-2">
+                    <div class="gallery-item">
+                        <a class="gallery-link glightbox" href="{{ $coverImage }}" data-gallery="myGallery">
+                            <img src="{{ $coverImage }}"
+                                onerror="this.onerror=null;this.src='{{ $mediaPlaceholder }}';"
+                                alt="{{ $photo->name }}"
+                                class="gallery-image">
+
+                            <div class="gallery-caption">
+                                {{ $photo->name }}
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+        </div>
+    </div>
+
+    @if ($videoGalleries->isNotEmpty())
+    <?php
+        $featuredVideo = $videoGalleries->first();
+        $featuredCover = $featuredVideo->cover != '' ? $featuredVideo->cover : $mediaPlaceholder;
+    ?>
+    <div class="container mt-5 mb-5">
+        <div class="box left-margin-10">
+            <header class="section-header">
+                <h3>ভিডিও গ্যালারী</h3>
+                <a href="{{ route('videos') }}" class="view-all-btn">সব দেখুন</a>
+            </header>
+
+            <div class="row g-4 align-items-center">
+                <div class="col-lg-6">
+                    <a class="video-feature-main glightbox" href="https://www.youtube.com/watch?v={{ $featuredVideo->video_ref }}" data-type="video">
+                        <img src="{{ $featuredCover }}"
+                            onerror="this.onerror=null;this.src='{{ $mediaPlaceholder }}';"
+                            alt="{{ $featuredVideo->video_title }}">
+                        <ion-icon name="play-circle-outline" class="video-feature-play"></ion-icon>
+                    </a>
+                    <h5 class="mt-3">{{ $featuredVideo->video_title }}</h5>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="swiper videoSwiper">
+                        <div class="swiper-wrapper">
+                            @foreach ($videoGalleries as $video)
+                            <?php $coverImage = $video->cover != '' ? $video->cover : $mediaPlaceholder; ?>
+                            <div class="swiper-slide">
+                                <a class="gallery-item d-block glightbox" href="https://www.youtube.com/watch?v={{ $video->video_ref }}"
+                                    data-type="video" data-gallery="myVideoGallery">
+                                    <img src="{{ $coverImage }}"
+                                        onerror="this.onerror=null;this.src='{{ $mediaPlaceholder }}';"
+                                        alt="{{ $video->video_title }}"
+                                        class="gallery-image">
+                                    <div class="gallery-caption">
+                                        {{ $video->video_title }}
+                                    </div>
+                                </a>
+                            </div>
+                            @endforeach
+                        </div>
+                        <div class="swiper-button-next"></div>
+                        <div class="swiper-button-prev"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
+
+    <div class="container">
+        <div class="quick-services mb-5 mt-5" data-aos="fade-up">
+            <h3 class="text-center mb-5 fw-bold h2" style="color: #198754;">
+                একাডেমিক বিভাগ ও সেবাসমূহ
+                <span class="d-block m-auto mt-2" style="width: 60px; height: 3px; background: #ff9900; border-radius: 10px;"></span>
+            </h3>
+
+            <div class="category-block mb-5">
+                <div class="row g-4">
+                    @foreach($schoolClasses as $class)
+                    <div class="col-xl-3 col-lg-4 col-md-6 col-6">
+                        <div class="service-card shadow-sm h-100 d-flex flex-column justify-content-center align-items-center p-4 text-center bg-white">
+                            <div class="service-icon shadow-sm">
+                                <ion-icon name="school-outline"></ion-icon>
+                            </div>
+                            <h6 class="fw-bold mt-3 mb-0">{{ $class->name }}</h6>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="quick-services mb-5 mt-5" data-aos="fade-up">
+            <h3 class="text-center mb-5 fw-bold h2" style="color: #198754;">
+                ই-সেবা
+                <span class="d-block m-auto mt-2" style="width: 60px; height: 3px; background: #ff9900; border-radius: 10px;"></span>
+            </h3>
+
+            <div class="row g-4">
+                @foreach ($eShebaCards as $eSheba)
+                <div class="col-xl-3 col-lg-4 col-md-6 col-6">
+                    <div class="service-card shadow-sm h-100 d-flex flex-column justify-content-between p-4 text-center bg-white">
+                        <div>
+                            <div class="service-icon shadow-sm">
+                                <ion-icon name="{{ $eSheba->icon }}"></ion-icon>
+                            </div>
+                            <h6 class="fw-bold">{{ $eSheba->name }}</h6>
+                        </div>
+                        <div class="mt-3">
+                            <a href="{{ route('eSheba.details', $eSheba->slug) }}"
+                                class="c-button btn btn-sm w-100 rounded-pill">
+                                বিস্তারিত
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+        </div>
+    </div>
+
     <div class="container">
         <section class="statistics-section container shadow-sm">
             <h3 class="text-center mb-5 fw-bold h2" style="color: #198754;">
@@ -168,94 +305,6 @@ $helplines = [
 
         </div>
     </section>
-
-
-    <div class="container">
-        <div class="quick-services mb-5 mt-5" data-aos="fade-up">
-            <h3 class="text-center mb-5 fw-bold h2" style="color: #198754;">
-                একাডেমিক বিভাগ ও সেবাসমূহ
-                <span class="d-block m-auto mt-2" style="width: 60px; height: 3px; background: #ff9900; border-radius: 10px;"></span>
-            </h3>
-
-            <div class="category-block mb-5">
-                <div class="row g-4">
-                    @foreach($schoolClasses as $class)
-                    <div class="col-xl-3 col-lg-4 col-md-6 col-6">
-                        <div class="service-card shadow-sm h-100 d-flex flex-column justify-content-center align-items-center p-4 text-center bg-white">
-                            <div class="service-icon shadow-sm">
-                                <ion-icon name="school-outline"></ion-icon>
-                            </div>
-                            <h6 class="fw-bold mt-3 mb-0">{{ $class->name }}</h6>
-                        </div>
-                    </div>
-                    @endforeach
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="container">
-        <div class="quick-services mb-5 mt-5" data-aos="fade-up">
-            <h3 class="text-center mb-5 fw-bold h2" style="color: #198754;">
-                ই-সেবা
-                <span class="d-block m-auto mt-2" style="width: 60px; height: 3px; background: #ff9900; border-radius: 10px;"></span>
-            </h3>
-
-            <div class="row g-4">
-                @foreach ($eShebaCards as $eSheba)
-                <div class="col-xl-3 col-lg-4 col-md-6 col-6">
-                    <div class="service-card shadow-sm h-100 d-flex flex-column justify-content-between p-4 text-center bg-white">
-                        <div>
-                            <div class="service-icon shadow-sm">
-                                <ion-icon name="{{ $eSheba->icon }}"></ion-icon>
-                            </div>
-                            <h6 class="fw-bold">{{ $eSheba->name }}</h6>
-                        </div>
-                        <div class="mt-3">
-                            <a href="{{ route('eSheba.details', $eSheba->slug) }}"
-                                class="c-button btn btn-sm w-100 rounded-pill">
-                                বিস্তারিত
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                @endforeach
-            </div>
-        </div>
-    </div>
-
-
-    <div class="container mt-5 mb-5">
-        <h3 class="text-center mb-5 fw-bold h2" style="color: #198754;">
-            নোটিশ সমূহ
-            <span class="d-block m-auto mt-2" style="width: 70px; height: 3px; background: #ff9900; border-radius: 10px;"></span>
-        </h3>
-
-        <div class="row g-4">
-            @foreach ($noticetypes as $noticet)
-            <div class="col-lg-6" data-aos="fade-up">
-                <div class="feature-card shadow-sm p-4 rounded bg-white">
-                    <h4 class="h4 mb-3">{{ $noticet->name }}</h4>
-                    <p class="text-muted small">
-                        {{ Str::limit($noticet->details, 120) }}
-                    </p>
-
-                    <ul class="feature-list mt-3">
-                        @foreach ($noticet->items as $notice)
-                        <li>
-                            <a href="{{ route('notice.details', $notice->id) }}" class="d-flex align-items-center">
-                                <ion-icon name="chevron-forward-circle-outline" class="me-2"></ion-icon>
-                                <span>{{ $notice->name }}</span>
-                            </a>
-                        </li>
-                        @endforeach
-                    </ul>
-                </div>
-            </div>
-            @endforeach
-        </div>
-    </div>
-
 
     <div class="container">
         <div class="helpline-section mt-5">
@@ -344,45 +393,22 @@ $helplines = [
             </div>
 
         </div>
-
-
-
-        <div class="box left-margin-10 mt-5">
-            <header class="section-header">
-                <h3>ছবি গ্যালারী</h3>
-                <a href="{{ route('photos') }}" class="view-all-btn">সব দেখুন</a>
-            </header>
-            <div class="row">
-                @if ($photoGalleries != '')
-                <?php $i = 0; ?>
-                @foreach ($photoGalleries as $photo)
-                <?php
-                $i++;
-                $photoImagePath = $photo->image;
-                if ($photo->image != '') {
-                    $coverImage = $photoImagePath;
-                } else {
-                    $coverImage = asset('assets/front/images/defaultlogo.png');
-                }
-                ?>
-                <div class="col-sm-4 pt-2 pb-2">
-                    <div class="gallery-item">
-                        <a class="gallery-link glightbox" href="{{ $coverImage }}" data-gallery="myGallery">
-                            <img src="{{ $coverImage }}"
-                                alt="{{ $photo->name }}"
-                                class="gallery-image">
-
-                            <div class="gallery-caption">
-                                {{ $photo->name }}
-                            </div>
-                        </a>
-                    </div>
-                </div>
-                @endforeach
-                @endif
-            </div>
-        </div>
     </div>
+
 </main>
+
+@push('scripts')
+<script>
+    new Swiper(".videoSwiper", {
+        slidesPerView: 2,
+        spaceBetween: 16,
+        navigation: { nextEl: ".videoSwiper .swiper-button-next", prevEl: ".videoSwiper .swiper-button-prev" },
+        breakpoints: {
+            0: { slidesPerView: 1 },
+            576: { slidesPerView: 2 },
+        },
+    });
+</script>
+@endpush
 
 @endsection

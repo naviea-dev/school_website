@@ -12,8 +12,8 @@ class CommonDataComposer
 
     public function __construct(SchoolApiClient $apiService)
     {
-        //$domain = request()->getHost();
-        $domain = 'eduibd.com';
+        $domain = request()->getHost();
+
 
         $this->commonData = Cache::remember(
             'website_common_' . $domain,
@@ -25,9 +25,11 @@ class CommonDataComposer
                 if (!$response) {
                     return [
                         'school_name' => 'EduiBD',
+                        'logo' => null,
                         'school_tag' => 'We provide a supportive learning environment where students develop academic excellence, creativity, confidence, and essential skills to succeed in a global society.',
                         'school' => null,
                         'menus' => [],
+                        'footer_menus' => [],
                         'footer' => [],
                     ];
                 }
@@ -42,7 +44,7 @@ class CommonDataComposer
     {
         return [
             'school_name' => $data->data->school->name ?? 'EduiBD',
-            'logo' => $data->data->school->logo,
+            'logo' => $data->data->school->logo ?? null,
             'school_tag' => 'We provide a supportive learning environment where students develop academic excellence, creativity, confidence, and essential skills to succeed in a global society.',
             'school' => $data->data->school ?? null,
             'menus' => $this->buildMenuTree(

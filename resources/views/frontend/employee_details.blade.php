@@ -18,7 +18,9 @@
                             <h4>{{ $employee->designation }}</h4>
                         </header>
 
+                        @if($employee->bio)
                         <p style="margin-bottom:20px;">{!! $employee->bio !!}</p>
+                        @endif
                     </div>
               </div>
             </div>

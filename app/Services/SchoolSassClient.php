@@ -48,6 +48,11 @@ class SchoolSassClient
         return $this->get('faculty');
     }
 
+    public function teachers(): array
+    {
+        return $this->get('teachers');
+    }
+
     public function photoGallery(): array
     {
         return $this->get('photo-gallery');
@@ -111,7 +116,10 @@ class SchoolSassClient
     public function submitPreAdmission(array $fields, ?\Illuminate\Http\UploadedFile $photo = null): array
     {
         try {
-            $request = Http::withToken($this->token)->acceptJson()->timeout(10);
+            $request = Http::withToken($this->token)
+                ->acceptJson()
+                ->withHeaders(['X-Domain' => request()->getHost()])
+                ->timeout(10);
 
             if ($photo) {
                 $request = $request->attach('photo', fopen($photo->getRealPath(), 'r'), $photo->getClientOriginalName());
@@ -155,6 +163,7 @@ class SchoolSassClient
         try {
             $response = Http::withToken($this->token)
                 ->acceptJson()
+                ->withHeaders(['X-Domain' => request()->getHost()])
                 ->timeout(5)
                 ->get("{$this->baseUrl}/api/v1/website/ping");
 
@@ -191,6 +200,7 @@ class SchoolSassClient
         try {
             $response = Http::withToken($this->token)
                 ->acceptJson()
+                ->withHeaders(['X-Domain' => request()->getHost()])
                 ->timeout(5)
                 ->get("{$this->baseUrl}/api/v1/website/{$endpoint}");
 

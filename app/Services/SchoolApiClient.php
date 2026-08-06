@@ -12,6 +12,7 @@ class SchoolApiClient
     public function __construct()
     {
         $this->api = rtrim(config('services.school_api.url'), '/');
+        //dd($this->api);
     }
 
     /**
@@ -22,8 +23,8 @@ class SchoolApiClient
         try {
             $response = Http::acceptJson()
                 ->withHeaders([
-                    //'X-Domain' => request()->getHost(),
-                    'X-Domain' => 'eduibd.com',
+                    'X-Domain' => request()->getHost(),
+                    //'X-Domain' => 'eduibd.com',
                 ])
                 ->timeout(10)
                 ->get($this->api . '/' . ltrim($endpoint, '/'));
@@ -34,7 +35,7 @@ class SchoolApiClient
         } catch (\Throwable $e) {
             Log::error('School API Error: ' . $e->getMessage());
 
-            return [];
+            return null;
         }
     }
     /**

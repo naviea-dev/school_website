@@ -21,10 +21,8 @@
                                     <tr>
                                       <th width="4%">ক্রমিক</th>
                                       <th width="15%">ছবি</th>
-                                      <th width="13%">নাম</th>
+                                      <th width="20%">নাম</th>
                                       <th width="24%">পদবি</th>
-                                      <th width="24%">বিভাগ</th>
-                                      <th width="24%">শাখা</th>
                                       <th width="24%">মোবাইল</th>
                                       <th width="24%">ইমেইল</th>
                                   </tr>
@@ -40,8 +38,6 @@
                               <td><img src="{{ $employee->image }}" style="width:70px; height:auto" /></td>
                               <td>{{ $employee->name }}</td>
 							  <td>{{ $employee->designation }}</td>
-                              <td>{{ $employee->department }}</td>
-                              <td>{{ $employee->branch }}</td>
                               <td>{{ $employee->mobile }}</td>
                               <td>{{ $employee->email }}</td>
                             </tr>

@@ -50,10 +50,10 @@
                     </div>
 
                     <div class="mt-5 pt-4 border-top">
-                        <p class="fw-bold text-muted mb-2 small text-uppercase">এই নোটিশটি শেয়ার করুন</p>
-                        <div class="d-flex gap-2">
-                            <a href="https://www.facebook.com/sharer/sharer.php?u={{ url()->current() }}" target="_blank" class="btn btn-primary btn-sm rounded-circle"><ion-icon name="logo-facebook" class="p-1"></ion-icon></a>
-                            <a href="https://wa.me/?text={{ $notices->name }} - {{ url()->current() }}" target="_blank" class="btn btn-success btn-sm rounded-circle"><ion-icon name="logo-whatsapp" class="p-1"></ion-icon></a>
+                        <p class="fw-bold text-muted mb-3 small text-uppercase">এই নোটিশটি শেয়ার করুন</p>
+                        <div class="d-flex gap-3">
+                            <a href="https://www.facebook.com/sharer/sharer.php?u={{ url()->current() }}" target="_blank" rel="noopener" class="share-icon-btn share-icon-facebook" aria-label="ফেসবুকে শেয়ার করুন"><ion-icon name="logo-facebook"></ion-icon></a>
+                            <a href="https://wa.me/?text={{ $notices->name }} - {{ url()->current() }}" target="_blank" rel="noopener" class="share-icon-btn share-icon-whatsapp" aria-label="হোয়াটসঅ্যাপে শেয়ার করুন"><ion-icon name="logo-whatsapp"></ion-icon></a>
                         </div>
                     </div>
                 </article>

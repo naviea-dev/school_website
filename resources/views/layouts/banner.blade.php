@@ -10,11 +10,4 @@
         <div class="swiper-button-next"></div>
         <div class="swiper-button-prev"></div>
     </div>
-
-    <div class="overlay-content">
-        <div class="hero-content">
-            <h1 id="slide-title">{{ $commonData['school_name'] }}</h1>
-            <p id="slide-desc">{{ $commonData['school_tag'] }}</p>
-        </div>
-    </div>
 </section>
