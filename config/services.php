@@ -31,13 +31,11 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
-    'school_sass' => [
-        'base_url'   => env('SCHOOL_SASS_BASE_URL', 'http://localhost/school-sass'),
-        'token'      => env('SCHOOL_API_TOKEN'),
-        'cache_ttl'  => env('SCHOOL_SASS_CACHE_TTL', 300),
-    ],
     'school_api' => [
         'url' => env('SCHOOL_API_URL'),
     ],
+
+    // Human-facing login link to the school-sass admin portal (not an API base).
+    'school_portal_url' => env('SCHOOL_PORTAL_URL', 'http://localhost/school-sass'),
 
 ];

@@ -5,14 +5,17 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use View;
 use App\Models\Administration;
-use App\Services\SchoolSassClient;
+use App\Services\SchoolApiClient;
 use Exception;
 use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
-    public function __construct()
+    protected SchoolApiClient $apiService;
+
+    public function __construct(SchoolApiClient $apiService)
     {
+        $this->apiService = $apiService;
         echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />';
         $this->middleware('auth:administration');
     }
@@ -21,7 +24,8 @@ class AdminController extends Controller
     public function dashboard(Request $request)
     {
         $testData = 'df df';
-        $members = collect(app(SchoolSassClient::class)->faculty())->map(fn ($m) => (object) $m);
+        $response = $this->apiService->request('faculty');
+        $members = collect($response->data ?? [])->map(fn ($m) => (object) $m);
         $statisticData = [
             'totalMembers' => $members->count(),
             'lastInsertedMember' => $members->sortByDesc('id')->take(5)->values(),

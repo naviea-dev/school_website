@@ -67,7 +67,7 @@
                     @if (!empty($item->cta))
                     <div class="mt-4 pt-4 border-top">
                         @if (!empty($item->cta['url']))
-                        <a href="{{ config('services.school_sass.base_url') }}" target="_blank" rel="noopener" class="btn btn-success rounded-pill px-4">
+                        <a href="{{ config('services.school_portal_url') }}" target="_blank" rel="noopener" class="btn btn-success rounded-pill px-4">
                             {{ $item->cta['label'] }}
                         </a>
                         @elseif (!empty($item->cta['route']))

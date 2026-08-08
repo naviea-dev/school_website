@@ -2,12 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\SchoolSassClient;
+use App\Services\SchoolApiClient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class OnlineFormController extends BaseController
 {
+    protected SchoolApiClient $apiService;
+
+    public function __construct(SchoolApiClient $apiService)
+    {
+        $this->apiService = $apiService;
+    }
+
     public function show()
     {
         return view('frontend.online_form');
@@ -52,7 +59,7 @@ class OnlineFormController extends BaseController
         $fields = $validator->validated();
         unset($fields['photo']);
 
-        $result = app(SchoolSassClient::class)->submitPreAdmission(
+        $result = $this->apiService->preAdmission(
             $fields,
             $request->file('photo')
         );

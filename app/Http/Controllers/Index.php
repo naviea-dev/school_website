@@ -10,7 +10,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\BaseController;
 use App\Services\SchoolApiClient;
-use App\Services\SchoolSassClient;
 use Illuminate\Support\Facades\Response;
 
 class Index extends Controller
@@ -89,10 +88,24 @@ class Index extends Controller
 	public function index()
 	{
 		$data = $this->apiService->request('home');
-		/* $managements = $this->apiService->request('management');
-		$videoGalleries = $this->apiService->request('video-gallery');
-		$teachers = $this->apiService->request('teachers'); */
 		$eShebaCards = collect(self::E_SHEBA)->map(fn($e) => (object) $e);
+
+		$managements = collect($data->managements ?? [])
+			->map(fn($m) => (object) [
+				'name' => $m->name ?? '',
+				'position' => $m->designation ?? '',
+				'designation' => $m->designation ?? '',
+				'image' => $m->image ?? null,
+				'details' => $m->details ?? '',
+			]);
+
+		$teachers = collect($data->teachers ?? [])
+			->map(fn($t) => (object) [
+				'name' => $t->name ?? '',
+				'position' => $t->designation->name ?? '',
+				'designation' => $t->designation->name ?? '',
+				'image' => $t->image ?? null,
+			]);
 
 		return view('frontend.home', [
 			'banners' => $data->banners ?? [],
@@ -100,9 +113,9 @@ class Index extends Controller
 			'noticetypes' => $data->notice_types ?? [],
 			'photoGalleries' => collect($data->photo_gallery ?? []),
 			'faculties' => collect($data->faculty ?? []),
-			'managements' => $data->managements ?? [],
-			'teachers' => $data->teachers ?? [],
-			'videoGalleries' => $data->videoGalleries ?? [],
+			'managements' => $managements,
+			'teachers' => $teachers,
+			'videoGalleries' => collect($data->video_galleries ?? []),
 			'stats' => $data->stats ?? (object) [],
 			'schoolClasses' => $data->classes ?? [],
 			'eShebaCards' => $eShebaCards,
@@ -146,7 +159,8 @@ class Index extends Controller
 
 	public function videos(Request $req)
 	{
-		$videos = collect(app(SchoolSassClient::class)->videoGallery())->map(fn($v) => (object) $v);
+		$response = $this->apiService->request('video-gallery');
+		$videos = collect($response->data ?? [])->map(fn($v) => (object) $v);
 
 		return view('frontend.videos', compact('videos'));
 	}
@@ -154,7 +168,8 @@ class Index extends Controller
 
 	public function messages($id)
 	{
-		$record = collect(app(SchoolSassClient::class)->management())->firstWhere('id', (int) $id);
+		$response = $this->apiService->request('management');
+		$record = collect($response->data ?? [])->firstWhere('id', (int) $id);
 		$messages = $record ? (object) $record : null;
 
 		return view('frontend.message_details', compact('messages'));
@@ -162,10 +177,11 @@ class Index extends Controller
 
 	public function notice()
 	{
-		$noticeTypes = collect(app(SchoolSassClient::class)->noticeTypes())->map(fn($t) => (object) $t);
+		$data = $this->apiService->request('notice-page');
+		$noticeTypes = collect($data->notice_types ?? [])->map(fn($t) => (object) $t);
 
 		$typeId = request()->get('type');
-		$all = collect(app(SchoolSassClient::class)->notices())->sortByDesc('id')->values()->map(fn($n) => (object) $n);
+		$all = collect($data->notices ?? [])->sortByDesc('id')->values()->map(fn($n) => (object) $n);
 
 		if ($typeId) {
 			$all = $all->where('notice_type_id', (int) $typeId)->values();
@@ -187,7 +203,8 @@ class Index extends Controller
 	}
 	public function notice_details($id)
 	{
-		$all = collect(app(SchoolSassClient::class)->notices())->map(fn($n) => (object) $n);
+		$data = $this->apiService->request('notice-page');
+		$all = collect($data->notices ?? [])->map(fn($n) => (object) $n);
 		$notices = $all->firstWhere('id', (int) $id);
 
 		if (!$notices) {
@@ -201,14 +218,16 @@ class Index extends Controller
 
 	public function management(Request $req)
 	{
-		$managements = collect(app(SchoolSassClient::class)->management())->map(fn($m) => (object) $m);
+		$response = $this->apiService->request('management');
+		$managements = collect($response->data ?? [])->map(fn($m) => (object) $m);
 
 		return view('frontend.management', compact('managements'));
 	}
 
 	public function faculty(Request $req)
 	{
-		$faculties = collect(app(SchoolSassClient::class)->faculty())
+		$response = $this->apiService->request('faculty');
+		$faculties = collect($response->data ?? [])
 			->sortBy('sequence')
 			->values()
 			->map(fn($f) => (object) $f);
@@ -218,7 +237,8 @@ class Index extends Controller
 
 	public function employee(Request $req)
 	{
-		$allemployee = collect(json_decode(json_encode(app(SchoolSassClient::class)->teachers())))
+		$response = $this->apiService->request('teachers');
+		$allemployee = collect($response->data ?? [])
 			->map(fn($t) => (object) [
 				'id' => $t->id ?? null,
 				'name' => $t->name ?? '',
@@ -234,7 +254,8 @@ class Index extends Controller
 	}
 	public function employee_details($id)
 	{
-		$employee = collect(json_decode(json_encode(app(SchoolSassClient::class)->teachers())))
+		$response = $this->apiService->request('teachers');
+		$employee = collect($response->data ?? [])
 			->map(fn($t) => (object) [
 				'id' => $t->id ?? null,
 				'name' => $t->name ?? '',

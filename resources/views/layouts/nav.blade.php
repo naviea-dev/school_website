@@ -64,7 +64,7 @@
                     <div class="d-flex align-items-center gap-2">
 
                         <!-- LOGIN BUTTON (school-sass) -->
-                        <a href="{{ config('services.school_sass.base_url') }}" target="_blank" rel="noopener"
+                        <a href="{{ config('services.school_portal_url') }}" target="_blank" rel="noopener"
                             class="btn btn-outline-primary btn-sm d-flex align-items-center gap-1 px-3 rounded-pill shadow-sm hover-shadow">
 
                             <ion-icon name="person-circle-outline"></ion-icon>
