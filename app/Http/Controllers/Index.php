@@ -89,28 +89,10 @@ class Index extends Controller
 	public function index()
 	{
 		$data = $this->apiService->request('home');
+		/* $managements = $this->apiService->request('management');
+		$videoGalleries = $this->apiService->request('video-gallery');
+		$teachers = $this->apiService->request('teachers'); */
 		$eShebaCards = collect(self::E_SHEBA)->map(fn($e) => (object) $e);
-
-		$managements = collect(json_decode(json_encode(app(SchoolSassClient::class)->management())))
-			->map(fn($m) => (object) [
-				'name' => $m->name ?? '',
-				'position' => $m->designation ?? '',
-				'designation' => $m->designation ?? '',
-				'image' => $m->image ?? null,
-				'details' => $m->details ?? '',
-			]);
-
-		$teachers = collect(json_decode(json_encode(app(SchoolSassClient::class)->teachers())))
-			->map(fn($t) => (object) [
-				'name' => $t->name ?? '',
-				'position' => $t->designation->name ?? '',
-				'designation' => $t->designation->name ?? '',
-				'image' => $t->image ?? null,
-			]);
-
-		$videoGalleries = collect(app(SchoolSassClient::class)->videoGallery())
-			->take(8)
-			->map(fn($v) => (object) $v);
 
 		return view('frontend.home', [
 			'banners' => $data->banners ?? [],
@@ -118,9 +100,9 @@ class Index extends Controller
 			'noticetypes' => $data->notice_types ?? [],
 			'photoGalleries' => collect($data->photo_gallery ?? []),
 			'faculties' => collect($data->faculty ?? []),
-			'managements' => $managements,
-			'teachers' => $teachers,
-			'videoGalleries' => $videoGalleries,
+			'managements' => $data->managements ?? [],
+			'teachers' => $data->teachers ?? [],
+			'videoGalleries' => $data->videoGalleries ?? [],
 			'stats' => $data->stats ?? (object) [],
 			'schoolClasses' => $data->classes ?? [],
 			'eShebaCards' => $eShebaCards,
